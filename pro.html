@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gradient-to-r from-slate-900 to-slate-800 flex justify-center items-center max-w-sm mx-auto min-h-screen">
+    
+    <div class="max-w-sm w-full p-6 rounded-xl text-white ">
+
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <p class="text-gray-100 text-xs">Welcome back</p>
+                <input type="text" class="input-field bg-slate-900 text-white text-xl font-bold bg-opacity-0 "
+                    id="displayName" name="displayName" readonly>
+            </div>
+            <div class="w-12 h-12 rounded-lg flex justify-center items-center shadow-inner">
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    alt="Profile Image" id="profileImage" class="w-10 h-10 bg-white rounded-lg shadow-lg">
+            </div>
+        </div>
+        <div class="flex items-center border border-teal-400 p-1 space-x-2 rounded-md mb-4">
+            <input type="text"
+                class="input-field bg-gray-50 w-full text-center text-teal-400 text-xs font-bold bg-opacity-0 "
+                id="userId" placeholder="Line ID" name="userId" readonly>
+        </div>
+
+
+        <form id="edit-form">
+
+            <input type="hidden" id="edit-id">
+
+            <div class="mb-4 hidden">
+                <label for="edit-userID" class="block text-sm">UserID</label>
+                <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
+            </div>
+            <div class="flex my-8">
+                <div class="w-1/3">
+                    <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
+                    <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
+                        oninput="updateImagePreview()" disabled>
+                    <img id="image-preview"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="Image Preview" class="w-20 h-20 rounded">
+                </div>
+                <div class="bg-teal-400 w-2/3 text-white p-4 rounded flex items-center">
+                    <div class="flex justify-between w-full">
+                        <div>
+                            <p class="text-black text-xs font-bold">POINT</p>
+                            <p class="text-sm font-bold">RANK A</p>
+                        </div>
+                        <div>
+                            <input type="text"
+                                class="input-field w-16 bg-slate-900 text-white text-3xl text-teal-900 text-right font-bold bg-opacity-0 "
+                                id="edit-point" name="edit-point" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mb-4 hidden" id="image-upload-section">
+                <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
+                <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
+            </div>
+            <div class="mb-4">
+                <label for="edit-name" class="block text-xs text-teal-400">ชื่อ สกุล</label>
+                <input type="text" id="edit-name" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+            </div>
+            <div class="mb-4">
+                <label for="edit-employeeID" class="block text-xs text-teal-400">เบอร์ติดต่อ</label>
+                <input type="text" id="edit-employeeID" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+            </div>
+            <div class="mb-4">
+                <label for="edit-department" class="block text-xs text-teal-400">ที่อยู่</label>
+                <input type="text" id="edit-department" class="input-field bg-slate-900 text-white text-md font-bold bg-opacity-0 " disabled>
+            </div>
+            <div class="flex justify-start">
+                <button type="button" id="edit-button"
+                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">แก้ไข</button>
+                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
+                    onclick="cancelEdit()">ยกเลิก</button>
+                <button type="submit"
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">บันทึก</button>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx-dRQky1j3IETEVR8NsdE4zILhfjkCvauN1U69UF9aDQJCA8LqSq3CZm67xYku-T-P/exec';
+        const LIFF_ID = '2006214860-zDwRWk9w'; // Liff ID
+
+        let latestData = {};
+
+        // ฟังก์ชันสำหรับล็อกหรือปลดล็อกฟอร์มและจัดการการแสดงผลปุ่ม
+        function toggleFormEditing(enable) {
+            const inputs = document.querySelectorAll('#edit-form input');
+            const saveButton = document.querySelector('#edit-form button[type="submit"]');
+            const cancelButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
+            const imageUploadSection = document.getElementById('image-upload-section');
+
+            inputs.forEach(input => {
+                input.disabled = !enable; // ปลดล็อก input
+            });
+
+            if (enable) {
+                saveButton.classList.remove('hidden');
+                cancelButton.classList.remove('hidden');
+                imageUploadSection.classList.remove('hidden'); // แสดงส่วนอัปโหลดรูปภาพ
+                document.getElementById('edit-button').classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
+            } else {
+                saveButton.classList.add('hidden');
+                cancelButton.classList.add('hidden');
+                imageUploadSection.classList.add('hidden'); // ซ่อนส่วนอัปโหลดรูปภาพ
+                document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่ม Edit
+            }
+        }
+
+        // ฟังก์ชันสำหรับอัปเดตการแสดงผลของรูปภาพตาม URL ที่ป้อน
+        function updateImagePreview() {
+            const imageUrl = document.getElementById('edit-imageUrl').value;
+            const imagePreview = document.getElementById('image-preview');
+            imagePreview.src = imageUrl ? imageUrl : ''; // อัปเดต src ของรูปภาพ
+        }
+
+        async function searchDataByUserlineId(userlineId) {
+    try {
+        const response = await fetch(WEB_APP_URL);
+        const data = await response.json();
+
+        // ค้นหาข้อมูลที่ตรงกับ userlineId
+        const filteredData = data.filter(row => row[1] === userlineId);
+
+        if (filteredData.length > 0) {
+            // ใช้ข้อมูลจากแถวสุดท้ายที่พบ
+            latestData = filteredData[filteredData.length - 1]; 
+
+            // กรอกข้อมูลลงในฟอร์ม
+            document.getElementById('edit-id').value = latestData[0];
+            document.getElementById('edit-userID').value = latestData[1];
+            document.getElementById('edit-name').value = latestData[2];
+            document.getElementById('edit-employeeID').value = latestData[3];
+            document.getElementById('edit-department').value = latestData[4];
+            document.getElementById('edit-imageUrl').value = latestData[5];
+            document.getElementById('edit-point').value = latestData[6];
+
+            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+        } else {
+            Swal.fire({
+                title: 'Not Found',
+                text: 'ไม่พบข้อมูลที่ตรงกับ UserLineID นี้',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Failed to fetch data. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+        // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
+        window.onload = async () => {
+            await initializeLiff(),getUserProfile(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
+            toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
+        };
+
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: `${LIFF_ID}` }); // ใส่ LIFF ID ของคุณที่นี่
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    const userlineId = profile.userId; // ดึง userId จากโปรไฟล์
+                    searchDataByUserlineId(userlineId); // ค้นหาข้อมูลตาม userId
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF Initialization failed', error);
+            }
+        }
+        // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
+        async function getUserProfile() {
+            try {
+                // รับข้อมูลโปรไฟล์ของผู้ใช้
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                // กำหนดค่า userId และ displayName ในฟอร์ม
+                document.getElementById('userId').value = userId;
+                document.getElementById('displayName').value = profile.displayName;
+                document.getElementById('profileImage').src = profile.pictureUrl || DEFAULT_IMAGE_URL;
+
+            } catch (error) {
+                // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
+                console.error('Error getting profile data:', error);
+            }
+        }
+        document.getElementById('edit-button').addEventListener('click', function () {
+            toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
+        });
+
+        document.getElementById('edit-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const id = document.getElementById('edit-id').value;
+            const userID = document.getElementById('edit-userID').value;
+            const name = document.getElementById('edit-name').value;
+            const employeeID = document.getElementById('edit-employeeID').value;
+            const department = document.getElementById('edit-department').value;
+            const imageFile = document.getElementById('edit-image').files[0];
+
+            let imageUrl = document.getElementById('edit-imageUrl').value;
+
+            // แสดงผลการโหลด
+            Swal.fire({
+                title: 'Saving data...',
+                text: 'Please wait while we save your data.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // แสดง spinner
+                }
+            });
+
+            try {
+                let result;
+                if (imageFile) {
+                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+                    result = await updateData(id, userID, name, employeeID, department, base64Image);
+                } else {
+                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
+                }
+
+                // ตรวจสอบผลลัพธ์ที่ได้รับ
+                if (result && result.includes('Data updated')) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data saved successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                } else {
+                    throw new Error(result || 'Failed to save data');
+                }
+
+            } catch (error) {
+                console.error('Error saving data:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Failed to save data. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } finally {
+                cancelEdit();
+            }
+        });
+
+
+        // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
+        function cancelEdit() {
+            document.getElementById('edit-form').reset();
+            document.getElementById('edit-id').value = latestData[0];
+            document.getElementById('edit-userID').value = latestData[1];
+            document.getElementById('edit-name').value = latestData[2];
+            document.getElementById('edit-employeeID').value = latestData[3];
+            document.getElementById('edit-department').value = latestData[4];
+            document.getElementById('edit-imageUrl').value = latestData[5];
+
+            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+            toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
+        }
+
+        async function updateData(id, userID, name, employeeID, department, base64Image) {
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+            });
+            const result = await response.text();
+
+            // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
+            if (!result || result.trim() === '') {
+                throw new Error('Empty response from server');
+            }
+
+            return result;
+        }
+
+
+        // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+
+    </script>
+</body>
+
+</html>
