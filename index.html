@@ -53,7 +53,7 @@
     </style>
 </head>
 
-<body class="bg-slate-300" style="font-family: Noto Sans Thai;">
+<body class="bg-orange-100" style="font-family: Noto Sans Thai;">
     <!-- Product Selection -->
     <div id="product-selection" class="max-w-md mx-auto pt-20">
         <div class=" p-4 rounded-lg">
@@ -67,12 +67,12 @@
                         <div class="pl-4">
                             <p class="text-slate-400 text-xs">ยินดีต้อนรับ</p>
                             <input type="text"
-                                class="input-field bg-slate-800 w-32 text-slate-800 text-lg font-bold bg-opacity-0"
+                                class="input-field bg-amber-950 w-32 text-amber-950 text-lg font-bold bg-opacity-0"
                                 id="displayName" name="displayName" readonly>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <p class="bg-lime-200 mx-1 rounded-lg w-full max-w-24 p-2 text-slate-800 text-md font-bold flex items-center gap-2"
+                        <p class="bg-orange-100 mx-1 rounded-lg w-full max-w-24 p-2 text-amber-950 text-md font-bold flex items-center gap-2"
                             id="userPoints">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
                                 color="#000000" fill="none">
@@ -87,7 +87,7 @@
                             0
                         </p>
                         <button id="go-to-cart"
-                            class="bg-slate-800 text-white text-md py-2 px-4 flex items-center gap-2 rounded-lg ml-4">
+                            class="bg-amber-950 text-white text-md py-2 px-4 flex items-center gap-2 rounded-lg ml-4">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
                                 color="#ffffff" fill="none">
                                 <path
@@ -145,7 +145,7 @@
                 </div>
 
                 <button id="go-to-shipping"
-                    class="w-full bg-slate-800 text-white p-4 rounded-lg font-semibold hidden">ถัดไป</button>
+                    class="w-full bg-amber-950 text-white p-4 rounded-lg font-semibold hidden">ถัดไป</button>
             </div>
         </div>
     </div>
@@ -193,7 +193,7 @@
                     </div>
                     <input type="hidden" id="userlineid" name="userlineid">
                 </div>
-                <button type="submit" class="bg-slate-800 text-white p-4 w-full rounded-lg mt-4">สั่งซื้อสินค้า</button>
+                <button type="submit" class="bg-amber-950 text-white p-4 w-full rounded-lg mt-4">สั่งซื้อสินค้า</button>
             </form>
         </div>
     </div>
@@ -308,10 +308,10 @@
 
             categories.forEach(category => {
                 const tabButton = document.createElement('button');
-                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2', 'rounded-lg', 'focus:outline-none', 'flex', 'border','border-lime-200', 'items-center', 'justify-start', 'space-x-2' );
+                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2', 'rounded-lg', 'focus:outline-none', 'flex', 'border','border-amber-950', 'items-center', 'justify-start', 'space-x-2' );
 
                 if (category === currentTab) {
-                    tabButton.classList.add('active', 'bg-lime-200', 'text-black');
+                    tabButton.classList.add('active', 'bg-amber-950', 'text-white');
                 }
 
                 const categoryImage = document.createElement('img');
@@ -407,10 +407,10 @@
             }
 
             return `
-                <div class="bg-slate-100 p-3 flex flex-col rounded-lg  relative">
+                <div class="bg-white p-3 flex flex-col rounded-lg  relative">
                     <div class="relative">
                         <img src="${product['img-product']}" alt="${product.name}" class="w-full h-40 object-cover rounded-lg">
-                        <div class="absolute top-0 right-0 bg-slate-800 text-white py-1  px-2 rounded-bl-lg rounded-tr-lg">
+                        <div class="absolute top-0 right-0 bg-amber-950 text-sm text-white py-1  px-2 rounded-bl-lg rounded-tr-lg">
                             ${product.Price} บาท
                         </div>
                     </div>
@@ -421,7 +421,7 @@
                         <select class="bg-white p-1 rounded-lg product-size" data-id="${product.id}" style="width: 60%;">
                             ${sizeOptions}
                         </select>
-                        <button class="bg-lime-200 text-black p-2 rounded-lg  focus:outline-none focus:ring-2 add-to-cart" data-id="${product.id}" style="width: 35%;">ซื้อ</button>
+                        <button class="bg-orange-100 text-black p-2 rounded-lg  focus:outline-none focus:ring-2 add-to-cart" data-id="${product.id}" style="width: 35%;">ซื้อ</button>
                     </div>
                 </div>
             `;
