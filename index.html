@@ -53,7 +53,7 @@
     </style>
 </head>
 
-<body class="bg-orange-100">
+<body class="bg-orange-50">
     <!-- ฟังก์ชันการแสดงรายการสินค้า -->
     <div id="product-selection" class="max-w-md mx-auto pt-20">
         <div class=" p-4 rounded-lg">
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <p class="bg-lime-200 mx-1 rounded-lg w-full max-w-24 p-2 text-slate-800 text-md font-bold flex items-center gap-2"
+                        <p class="bg-amber-200 mx-1 rounded-lg w-full max-w-24 p-2 text-slate-800 text-md font-bold flex items-center gap-2"
                             id="userPoints">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
                                 color="#000000" fill="none">
@@ -661,7 +661,7 @@
         // ฟังก์ชันสำหรับแสดงสินค้าด้วย HTML
         function createProductHtml(product) {
             let sizeOptions = '<option value="" disabled selected>เลือกไซต์</option>'; // ค่าเริ่มต้นเป็น "เลือกไซต์"
-            const sizeKeys = ['FS', 'S', 'M', 'L', 'XL', 'XXL'];
+            const sizeKeys = ['FS', '36', '37', '38', '39', '40'];
 
             sizeKeys.forEach(size => {
                 if (product[size] > 0) {
