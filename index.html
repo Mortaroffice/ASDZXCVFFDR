@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <p class="bg-amber-200 mx-1 rounded-lg w-full max-w-24 p-2 text-slate-800 text-md font-bold flex items-center gap-2"
+                        <p class="bg-orange-200 mx-1 rounded-lg w-full max-w-24 p-2 text-slate-800 text-md font-bold flex items-center gap-2"
                             id="userPoints">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
                                 color="#000000" fill="none">
@@ -132,7 +132,7 @@
                 <div class="flex justify-between items-center p-4">
                     <h2 class="text-md font-semibold">ตะกร้าสินค้า</h2>
                     <div id="back-to-products"
-                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border rounded-lg">กลับ ร้านค้า
+                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">กลับ ร้านค้า
                     </div>
                 </div>
             </div>
@@ -141,15 +141,10 @@
 
             <div class="pt-4">
                 <div class="flex justify-between items-center mb-4">
-                    <label for="shipping-options" class="text-sm">เลือกวิธีการจัดส่ง
-                        <span class="text-slate-800 text-xs" style="float: inline-start;">ส่งฟรีเมื่อยอดซื้อครบ 500
-                            บาท</span>
-                    </label>
-                    <select id="shipping-options" class="bg-white border border-gray-400 rounded-lg p-2">
-                        <option value="A00000">จัดส่ง ทั่วไป</option>
-                        <option value="A00001">จัดส่งด่วน</option>
-                        <option value="A00002">จัดส่งขนส่ง</option>
-
+                    <label for="shipping-options" class="text-sm">เลือกวิธีการจัดส่ง</label>
+                    <select id="shipping-options" class="bg-white text-sm border border-gray-400 rounded-lg p-2">
+                        <option value="A00000">จัดส่ง(ปกติ)</option>
+                        <option value="A00001">จัดส่ง(ด่วน)</option>
                     </select>
                 </div>
 
@@ -182,9 +177,7 @@
                 <!-- เพิ่ม margin-top เพื่อให้ไม่ทับกับ header อื่น -->
                 <div class="flex justify-between items-center p-4">
                     <h2 class="text-md font-semibold">การจัดส่ง</h2>
-                    <button id="back-to-cart"
-                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border rounded-lg">กลับ
-                        ตะกร้าสินค้า</button>
+                    <button id="back-to-cart" class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">กลับ ตะกร้าสินค้า</button>
                 </div>
             </div>
             <form id="shipping-form">
@@ -575,11 +568,11 @@
 
             categories.forEach(category => {
                 const tabButton = document.createElement('button');
-                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2', 'rounded-lg', 'focus:outline-none', 'flex', 'items-center', 'justify-start', 'space-x-2');
+                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2','border','border-orange-200', 'rounded-lg', 'focus:outline-none', 'flex', 'items-center', 'justify-start', 'space-x-2');
 
                 // ทำให้หมวดหมู่ 'All' ถูก active ตั้งแต่เริ่มต้น
                 if (category === currentTab) {
-                    tabButton.classList.add('active', 'bg-lime-200', 'text-black');
+                    tabButton.classList.add('active', 'bg-orange-200','border','border-orange-200', 'text-black'); 
                 }
 
                 const categoryImage = document.createElement('img');
@@ -660,7 +653,7 @@
 
         // ฟังก์ชันสำหรับแสดงสินค้าด้วย HTML
         function createProductHtml(product) {
-            let sizeOptions = '<option value="" disabled selected>เลือกไซต์</option>'; // ค่าเริ่มต้นเป็น "เลือกไซต์"
+            let sizeOptions = '<option value="" disabled selected>ขนาด</option>'; // ค่าเริ่มต้นเป็น "เลือกไซต์"
             const sizeKeys = ['FS', '36', '37', '38', '39', '40'];
 
             sizeKeys.forEach(size => {
@@ -675,7 +668,7 @@
             }
 
             return `
-        <div class="bg-slate-100 p-3 flex flex-col rounded-lg border     relative">
+        <div class="bg-white p-3 flex flex-col rounded-lg border     relative">
             <div class="relative">
                 <img src="${product['img-product']}" alt="${product.name}" class="w-full h-40 object-cover rounded-lg">
                 <div class="absolute top-0 right-0 bg-amber-950 text-white py-1  px-2 rounded-bl-lg rounded-tr-lg">
@@ -686,8 +679,8 @@
                 <h3 class="text-md font-semibold text-gray-900">${product.name}</h3>
             </div>
             <div class="mt-2 flex justify-between items-center">
-                <select class="bg-white border border-slate-800 py-2 rounded-lg product-size" data-id="${product.id}">  ${sizeOptions} </select>
-                <button class="bg-lime-200 text-black p-2 rounded-lg  focus:outline-none focus:ring-2 add-to-cart" data-id="${product.id}" style="width: 35%;">ซื้อ</button>
+                <select class="bg-white border border-orange-200 py-2 rounded-lg product-size" data-id="${product.id}">  ${sizeOptions} </select>
+                <button class="bg-orange-200 text-black p-2 rounded-lg  focus:outline-none focus:ring-2 add-to-cart" data-id="${product.id}" style="width: 35%;">ซื้อ</button>
             </div>
         </div>
     `;
