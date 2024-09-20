@@ -61,8 +61,8 @@
                 <div class="flex justify-between items-center p-4">
                     <div class="flex items-center">
                         <div class="w-12 h-12 rounded-lg items-center">
-                            <img src="https://lh5.googleusercontent.com/d/1PjDy6iy0ycKxyRXKFYpiAWlA2i8X9UWW" alt="Profile Image" id="profileImage"
-                                class="w-12 h-12 bg-white rounded-lg">
+                            <img src="https://lh5.googleusercontent.com/d/1PjDy6iy0ycKxyRXKFYpiAWlA2i8X9UWW"
+                                alt="Profile Image" id="profileImage" class="w-12 h-12 bg-white rounded-lg">
                         </div>
                         <div class="pl-4">
                             <p class="text-slate-800 text-xs">ยินดีต้อนรับ</p>
@@ -132,7 +132,8 @@
                 <div class="flex justify-between items-center p-4">
                     <h2 class="text-md font-semibold">ตะกร้าสินค้า</h2>
                     <div id="back-to-products"
-                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">กลับ ร้านค้า
+                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">
+                        กลับ ร้านค้า
                     </div>
                 </div>
             </div>
@@ -177,7 +178,9 @@
                 <!-- เพิ่ม margin-top เพื่อให้ไม่ทับกับ header อื่น -->
                 <div class="flex justify-between items-center p-4">
                     <h2 class="text-md font-semibold">การจัดส่ง</h2>
-                    <button id="back-to-cart" class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">กลับ ตะกร้าสินค้า</button>
+                    <button id="back-to-cart"
+                        class="bg-white opacitywhite text-center font-bold py-2 w-36 border border-amber-900 rounded-lg">กลับ
+                        ตะกร้าสินค้า</button>
                 </div>
             </div>
             <form id="shipping-form">
@@ -235,7 +238,7 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button id="confirm-order"
-                        class="w-full inline-flex justify-center rounded-lg border border-transparent  px-4 py-4 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">ยืนยันการสั่งซื้อ</button>
+                        class="w-full inline-flex justify-center rounded-lg border border-transparent  px-4 py-4 bg-amber-950 text-base font-medium text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 sm:ml-3 sm:w-auto sm:text-sm">ยืนยันการสั่งซื้อ</button>
                     <button id="close-modal"
                         class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300  px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">ยกเลิก</button>
                     <div id="order-status" class="px-4 py-3 sm:px-6 text-center text-sm hidden"></div>
@@ -249,7 +252,10 @@
         // ฟังก์ชันตั้งค่า
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby_a7rk3jozX0JR0WRkHYnWJzcP8OKhtSnejOe9seHI0OU0lZ_J-U_BUbZH0d3ulfca/exec";
         const WEB_MEMBER_APP_URL = 'https://script.google.com/macros/s/AKfycbx-dRQky1j3IETEVR8NsdE4zILhfjkCvauN1U69UF9aDQJCA8LqSq3CZm67xYku-T-P/exec';
-        const LIFF_ID = '2006214860-maOpnKkO'; // Liff ID
+
+        // Liff ID
+        const LIFF_ID = '2006214860-maOpnKkO';
+
         // ตัวเลือกการจัดส่ง
         const shippingOptions = [
             {
@@ -568,11 +574,11 @@
 
             categories.forEach(category => {
                 const tabButton = document.createElement('button');
-                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2','border','border-orange-200', 'rounded-lg', 'focus:outline-none', 'flex', 'items-center', 'justify-start', 'space-x-2');
+                tabButton.classList.add('flex-shrink-0', 'px-1', 'py-1', 'pr-2', 'border', 'border-orange-200', 'rounded-lg', 'focus:outline-none', 'flex', 'items-center', 'justify-start', 'space-x-2');
 
                 // ทำให้หมวดหมู่ 'All' ถูก active ตั้งแต่เริ่มต้น
                 if (category === currentTab) {
-                    tabButton.classList.add('active', 'bg-orange-200','border','border-orange-200', 'text-black'); 
+                    tabButton.classList.add('active', 'bg-orange-200', 'border', 'border-orange-200', 'text-black');
                 }
 
                 const categoryImage = document.createElement('img');
@@ -679,7 +685,7 @@
                 <h3 class="text-md font-semibold text-gray-900">${product.name}</h3>
             </div>
             <div class="mt-2 flex justify-between items-center">
-                <select class="bg-white border border-orange-200 py-2 rounded-lg product-size" data-id="${product.id}">  ${sizeOptions} </select>
+                <select class="bg-white border border-orange-200 p-2 rounded-lg product-size" data-id="${product.id}">  ${sizeOptions} </select>
                 <button class="bg-orange-200 text-black p-2 rounded-lg  focus:outline-none focus:ring-2 add-to-cart" data-id="${product.id}" style="width: 35%;">ซื้อ</button>
             </div>
         </div>
@@ -1006,33 +1012,41 @@
     `;
         }
 
-
-
         // กำหนดการทำงานให้ปุ่มต่างๆ
         goToCartBtn.addEventListener('click', showCart); // แสดงตะกร้าเมื่อคลิกที่ปุ่มตะกร้า
         backToProductsBtn.addEventListener('click', () => {
             cartView.classList.add('hidden'); // ซ่อนตะกร้า
             productSelection.classList.remove('hidden'); // แสดงรายการสินค้า
         });
+
         goToShippingBtn.addEventListener('click', showShippingInfo); // แสดงหน้าการจัดส่ง
         backToCartBtn.addEventListener('click', backToCart); // ย้อนกลับไปหน้าตะกร้า
         shippingForm.addEventListener('submit', handleShippingFormSubmit); // ส่งข้อมูลจัดส่ง
-        confirmOrderBtn.addEventListener('click', async () => {
-            await saveOrder(currentOrder); // บันทึกคำสั่งซื้อ
-            // ส่งข้อความแจ้งเตือนทาง LINE เมื่อบันทึกสำเร็จ
-            await sendTextMessage();
 
-            cart = []; // เคลียร์ตะกร้าหลังบันทึก
-            updateCartCount(); // อัปเดตจำนวนสินค้าในตะกร้า
-            shippingInfo.classList.add('hidden'); // ซ่อนหน้าการจัดส่ง
-            productSelection.classList.remove('hidden'); // แสดงหน้ารายการสินค้า
-            orderDetailsModal.classList.add('hidden'); // ซ่อน modal รายละเอียดการสั่งซื้อ
-            shippingForm.reset(); // ล้างข้อมูลฟอร์ม
-            liff.closeWindow(); // ปิดหน้าต่าง LIFF
+        let isOrderProcessing = false;
+        confirmOrderBtn.addEventListener('click', async () => {
+            if (isOrderProcessing) return; // หากกำลังประมวลผลอยู่ ไม่ทำอะไร
+            isOrderProcessing = true; // ตั้งสถานะว่ากำลังประมวลผล
+            confirmOrderBtn.disabled = true; // ปิดใช้งานปุ่ม
+
+            try {
+                await saveOrder(currentOrder);
+                await sendTextMessage();
+
+                // กระบวนการอื่น ๆ...
+
+                isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเสร็จสิ้น
+            } catch (error) {
+                console.error('Error processing order:', error);
+                orderStatusEl.textContent = 'เกิดข้อผิดพลาดในการสั่งซื้อ กรุณาลองอีกครั้ง';
+                confirmOrderBtn.disabled = false; // เปิดใช้งานปุ่มอีกครั้ง
+                isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเกิดข้อผิดพลาด
+            }
         });
         closeModalBtn.addEventListener('click', () => {
             orderDetailsModal.classList.add('hidden'); // ซ่อน modal เมื่อคลิกปุ่มปิด
         });
+
         async function sendTextMessage() {
             try {
                 // ตรวจสอบว่ามีการล็อกอินใน LIFF แล้วหรือไม่
