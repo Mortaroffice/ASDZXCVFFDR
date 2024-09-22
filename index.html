@@ -1018,25 +1018,24 @@
 
     let isOrderProcessing = false;
     confirmOrderBtn.addEventListener('click', async () => {
-      if (isOrderProcessing) return; // หากกำลังประมวลผลอยู่ ไม่ทำอะไร
-      isOrderProcessing = true; // ตั้งสถานะว่ากำลังประมวลผล
-      confirmOrderBtn.disabled = true; // ปิดใช้งานปุ่ม
+  if (isOrderProcessing) return; // หากกำลังประมวลผลอยู่ ไม่ทำอะไร
+  isOrderProcessing = true; // ตั้งสถานะว่ากำลังประมวลผล
+  confirmOrderBtn.disabled = true; // ปิดใช้งานปุ่ม
 
-      try {
-        await saveOrder(currentOrder);
-      // ส่งข้อความแจ้งเตือนทาง LINE เมื่อบันทึกสำเร็จ
-        await sendTextMessage();
-        // กระบวนการอื่น ๆ...
-        isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเสร็จสิ้น
-      } catch (error) {
-        console.error('Error processing order:', error);
-        orderStatusEl.textContent = 'เกิดข้อผิดพลาดในการสั่งซื้อ กรุณาลองอีกครั้ง';
-        confirmOrderBtn.disabled = false; // เปิดใช้งานปุ่มอีกครั้ง
-        isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเกิดข้อผิดพลาด
-        liff.closeWindow(); // ปิดหน้าต่าง LIFF
-      }
-    });
-    closeModalBtn.addEventListener('click', () => {
+  try {
+    await saveOrder(currentOrder);
+    await sendTextMessage(); // ส่งข้อความแจ้งเตือน
+    liff.closeWindow(); // ปิดหน้าต่าง LIFF หลังจากกระบวนการเสร็จสิ้น
+    isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเสร็จสิ้น
+  } catch (error) {
+    console.error('Error processing order:', error);
+    orderStatusEl.textContent = 'เกิดข้อผิดพลาดในการสั่งซื้อ กรุณาลองอีกครั้ง';
+    confirmOrderBtn.disabled = false; // เปิดใช้งานปุ่มอีกครั้ง
+    isOrderProcessing = false; // รีเซ็ตสถานะเมื่อเกิดข้อผิดพลาด
+  }
+});
+
+      closeModalBtn.addEventListener('click', () => {
       orderDetailsModal.classList.add('hidden'); // ซ่อน modal เมื่อคลิกปุ่มปิด
     });
 
