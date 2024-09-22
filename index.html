@@ -508,23 +508,29 @@
     let filteredProducts = []; // เก็บสินค้าที่ถูกค้นหา
     let isSearching = false; // เก็บสถานะการค้นหา
     function searchProducts() {
-      const query = document.getElementById('search-input').value.toLowerCase();
-      const products = JSON.parse(localStorage.getItem('products'));
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const products = JSON.parse(localStorage.getItem('products'));
 
-      if (query) {
-        // ถ้ามีการค้นหา ให้กรองสินค้าที่ตรงกับคำค้นหา
-        filteredProducts = products.filter(product => product.name.toLowerCase().includes(query));
-        isSearching = true; // ตั้งสถานะการค้นหา
-        currentPage = 0; // รีเซ็ตหน้าเป็น 0 เมื่อเริ่มการค้นหา
-      } else {
-        // ถ้าไม่มีการค้นหา ให้แสดงสินค้าทั้งหมด
-        filteredProducts = products;
-        isSearching = false;
-        currentPage = 0; // รีเซ็ตหน้าเป็น 0
-      }
+  if (query) {
+    // ถ้ามีการค้นหา ให้กรองสินค้าที่ตรงกับคำค้นหา
+    filteredProducts = products.filter(product => product.name.toLowerCase().includes(query));
+    isSearching = true; // ตั้งสถานะการค้นหา
+    currentPage = 0; // รีเซ็ตหน้าเป็น 0 เมื่อเริ่มการค้นหา
+  } else {
+    // ถ้าไม่มีการค้นหา ให้แสดงสินค้าทั้งหมด
+    filteredProducts = products;
+    isSearching = false;
+    currentPage = 0; // รีเซ็ตหน้าเป็น 0
+  }
 
-      renderProducts(filteredProducts); // แสดงสินค้าที่ค้นหา
-    }
+  // ถ้าไม่พบสินค้าที่ค้นหา จะแสดงข้อความแจ้งเตือน
+  if (filteredProducts.length === 0) {
+    productList.innerHTML = `<p class="text-center text-red-500">ไม่พบสินค้าที่ค้นหา</p>`;
+  } else {
+    renderProducts(filteredProducts); // แสดงสินค้าที่ค้นหา
+  }
+}
+
 
     // ฟังก์ชันสำหรับตั้งค่าราคาจัดส่งตามที่ต้องการ
     function setShippingCost(price) {
