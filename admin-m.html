@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,16 +11,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-orange-100 p-6">
+<body class="bg-orange-50 h-screen p-6">
     <div class="max-w-7xl m-auto">
-        <div class="text-center mb-6">
-            <h1 class="text-xl font-bold">จัดการการสั่งซื้อ จัดส่งสินค้า</h1>
-        </div>
-
         <div class="mb-4">
             <!-- Sort Field -->
-            <div class="flex justify-end">
-                <select id="filter-sort" class="border px-2 py-1 rounded">
+            <div class="flex justify-between">
+                <h1 class="text-lg font-bold">จัดการการสั่งซื้อ จัดส่งสินค้า</h1>
+
+                <select id="filter-sort" class="border px-2 py-1 rounded-xl">
                     <option value="desc">เรียงตาม ล่าสุด</option>
                     <option value="asc">เรียงตาม เก่าสุด</option>
                 </select>
@@ -45,13 +44,13 @@
 
     <!-- Modal สำหรับแก้ไข Express, TAX และ SEND -->
     <div id="edit-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-4 rounded-lg w-full max-w-md">
+        <div class="bg-gray-100 p-4 rounded-xl w-full max-w-md">
             <h2 class="text-xl mb-4">แก้ไข การจัดส่ง, เลขพัสดุ, เวลาจัดส่ง</h2>
             <form id="edit-form">
                 <input type="hidden" id="edit-order-id">
                 <div class="mb-4">
                     <label for="edit-express" class="block text-sm">บริการจัดส่ง</label>
-                    <select id="edit-express" class="w-full border px-2 py-1 rounded">
+                    <select id="edit-express" class="w-full border px-2 py-1 rounded-xl">
                         <option value="kerry">Kerry</option>
                         <option value="flash">Flash</option>
                         <option value="thaipost">ThaiPost</option>
@@ -60,19 +59,19 @@
 
                 <div class="mb-4">
                     <label for="edit-tax" class="block text-sm">เลขพัสดุ</label>
-                    <input type="text" id="edit-tax" class="w-full border px-2 py-1 rounded">
+                    <input type="text" id="edit-tax" class="w-full border px-2 py-1 rounded-xl">
                 </div>
 
                 <div class="mb-4">
                     <label for="edit-send" class="block text-sm">เวลาจัดส่ง</label>
-                    <input type="datetime-local" id="edit-send" class="w-full border px-2 py-1 rounded">
+                    <input type="datetime-local" id="edit-send" class="w-full border px-2 py-1 rounded-xl">
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2"
+                    <button type="button" class="bg-red-500 text-white py-1 px-3 rounded-xl hover:bg-red-700 mr-2"
                         onclick="closeModal()">ยกเลิก</button>
                     <button type="submit"
-                        class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700">บันทึก</button>
+                        class="bg-blue-500 text-white py-1 px-3 rounded-xl hover:bg-blue-700">บันทึก</button>
                 </div>
             </form>
         </div>
@@ -80,96 +79,98 @@
 
     <!-- Script -->
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzydSe-5RWFBsF-Au8YOf94-NH2ihAsEaG61UMUzZ5DKYOxycFMK4zKoUEqmtaf6S_P/exec';
-        const WEB_PRINT_URL = 'https://script.google.com/macros/s/AKfycbwg49OTm74AzdGq1GHLDBvMfP_yge2JipMOfcd43u-6zQbd9SxQovBOvt6UY8SY9q0Q/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzydSe-5RWFBsF-Au8YOf94-NH2ihAsEaG61UMUzZ5DKYOxycFMK4zKoUEqmtaf6S_P/exec';
+const WEB_PRINT_URL = 'https://script.google.com/macros/s/AKfycbwg49OTm74AzdGq1GHLDBvMfP_yge2JipMOfcd43u-6zQbd9SxQovBOvt6UY8SY9q0Q/exec';
         const ROWS_PER_PAGE = 10;
         let currentPage = 1;
         let tableData = [];
         let filteredData = [];
 
         async function fetchData() {
-            document.getElementById('loading-message').style.display = 'block';
-            try {
-                const response = await fetch(WEB_APP_URL);
-                const data = await response.json();
-                tableData = processOrders(data.slice(1));
-                filteredData = tableData;
-                applyFilters(); 
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถโหลดข้อมูลได้'
-                });
-            } finally {
-                document.getElementById('loading-message').style.display = 'none';
-            }
-        }
-
-        function processOrders(data) {
-            const processedData = [];
-            const orderMap = {};
-
-            data.forEach(row => {
-                const orderId = row[0];
-                const totalOrder = parseFloat(row[9]);
-                const totalPrice = parseFloat(row[10]);
-                const rawTimestamp = row[11];
-                const timestamp = new Date(rawTimestamp); // เก็บเป็น Date object เพื่อการเรียงลำดับ
-                const paymentStatus = row[12];
-                const express = row[13];
-                const tax = row[14];
-                const send = row[15] ? formatDate(row[15]) : ''; // Check if SEND is available
-
-                if (!orderMap[orderId]) {
-                    orderMap[orderId] = {
-                        orderId: orderId,
-                        name: row[1],
-                        address: row[2],
-                        contact: row[3],
-                        totalOrder: totalOrder,
-                        totalPrice: totalPrice,
-                        timestamp: timestamp,
-                        paymentStatus: paymentStatus,
-                        express: express,
-                        tax: tax,
-                        send: send,
-                        products: []
-                    };
-                } else {
-                    orderMap[orderId].totalOrder += totalOrder;
-                    orderMap[orderId].totalPrice += totalPrice;
-                }
-
-                orderMap[orderId].products.push({
-                    idProduct: row[4],
-                    product: row[5],
-                    price: row[6],
-                    size: row[7],
-                    value: row[8],
-                    totalOrder: totalOrder
-                });
+        document.getElementById('loading-message').style.display = 'block';
+        try {
+            const response = await fetch(WEB_APP_URL);
+            const data = await response.json();
+            tableData = processOrders(data.slice(1));
+            filteredData = tableData;
+            applyFilters(); 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถโหลดข้อมูลได้'
             });
+        } finally {
+            document.getElementById('loading-message').style.display = 'none';
+        }
+    }
 
-            for (let orderId in orderMap) {
-                processedData.push(orderMap[orderId]);
+    function processOrders(data) {
+        const processedData = [];
+        const orderMap = {};
+
+        data.forEach(row => {
+            const orderId = row[0];
+            const totalOrder = parseFloat(row[10]);
+            const totalPrice = parseFloat(row[11]);
+            const rawTimestamp = row[12];
+            const timestamp = new Date(rawTimestamp); // ใช้ข้อมูลนี้ในการจัดเรียง
+            const paymentStatus = row[13];
+            const express = row[14];
+            const tax = row[15];
+            const send = row[16] ? formatDate(row[16]) : '';
+
+            if (!orderMap[orderId]) {
+                orderMap[orderId] = {
+                    orderId: orderId,
+                    name: row[1],
+                    address: row[2],
+                    contact: row[3],
+                    note: row[4],
+                    totalOrder: totalOrder,
+                    totalPrice: totalPrice,
+                    timestamp: timestamp,  // เก็บข้อมูลวันที่สั่งซื้อ (timestamp)
+                    paymentStatus: paymentStatus,
+                    express: express,
+                    tax: tax,
+                    send: send,
+                    products: []
+                };
+            } else {
+                orderMap[orderId].totalOrder += totalOrder;
+                orderMap[orderId].totalPrice += totalPrice;
             }
 
-            return processedData;
-        }
-
-        function applyFilters() {
-            const filterSort = document.getElementById('filter-sort').value;
-
-            filteredData.sort((a, b) => {
-                return filterSort === 'asc' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
+            orderMap[orderId].products.push({
+                idProduct: row[6],
+                product: row[7],
+                price: row[8],
+                size: row[9],
+                value: row[10],
+                totalOrder: totalOrder
             });
+        });
 
-            currentPage = 1;
-            displayCards(filteredData);
-            renderPagination(filteredData.length);
+        for (let orderId in orderMap) {
+            processedData.push(orderMap[orderId]);
         }
+
+        return processedData;
+    }
+
+    function applyFilters() {
+        const filterSort = document.getElementById('filter-sort').value;
+
+        filteredData.sort((a, b) => {
+            return filterSort === 'asc' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp; // จัดเรียงตาม timestamp
+        });
+
+        currentPage = 1;
+        displayCards(filteredData);
+        renderPagination(filteredData.length);
+    }
+
 
         function displayCards(data) {
             const cardContainer = document.getElementById('data-cards');
@@ -181,31 +182,32 @@
 
             paginatedData.forEach(order => {
                 const card = document.createElement('div');
-                card.className = 'bg-white p-4 rounded-lg shadow';
+                card.className = 'bg-gray-100 p-4 rounded-xl shadow';
 
                 card.innerHTML = `
-                    <div>
-                        <h2 class="text-lg font-bold">Order: ${order.orderId}</h2>
-                        <p><strong>ลูกค้า: </strong> ${order.name}</p>
-                        <p><strong>ราคารวม: </strong> ${order.totalPrice.toFixed(2)} บาท</p>
-                        <p><strong>การชำระเงิน: </strong> ${order.paymentStatus}</p>
-                        <div class="flex justify-between mt-4">
-                            <button class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700" onclick="showDetails('${order.orderId}')">
-                                ดูรายการ
-                            </button>
-                            <button class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700" onclick="openEditModal('${order.orderId}')">
-                                ส่งของ
-                            </button>
-                            <button class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-700" onclick="confirmCreateDocument('${order.orderId}')">
-                                พิม
-                            </button>
-                            <button class="bg-gray-800 text-white py-1 px-3 rounded hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed" 
-                                onclick="openPaymentOptions('${order.orderId}')" 
-                                ${order.paymentStatus === 'ชำระเงินสำเร็จ' ? 'disabled' : ''}>
-                                การชำระเงิน
-                            </button>
-                        </div>
+                   <div>
+                    <h2 class="text-lg font-bold">Order: ${order.orderId}</h2>
+                    <p><strong>ลูกค้า: </strong> ${order.name}</p>
+                    <p><strong>ราคารวม: </strong> ${order.totalPrice.toFixed(2)} บาท</p>
+                    <p><strong>วันที่สั่งซื้อ: </strong> ${formatDate(order.timestamp)}</p>  <!-- แสดงวันที่สั่งซื้อจาก timestamp -->
+                    <p><strong>การชำระเงิน: </strong> ${order.paymentStatus}</p>
+                    <div class="flex justify-between mt-4">
+                        <button class="bg-blue-500 text-white py-1 px-3 rounded-xl hover:bg-blue-700" onclick="showDetails('${order.orderId}')">
+                            ดูรายการ
+                        </button>
+                        <button class="bg-yellow-500 text-white py-1 px-3 rounded-xl hover:bg-yellow-700" onclick="openEditModal('${order.orderId}')">
+                            ส่งของ
+                        </button>
+                        <button class="bg-green-500 text-white py-1 px-3 rounded-xl hover:bg-green-700" onclick="confirmCreateDocument('${order.orderId}')">
+                            พิม
+                        </button>
+                        <button class="bg-gray-800 text-white py-1 px-3 rounded-xl hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed" 
+                            onclick="openPaymentOptions('${order.orderId}')" 
+                            ${order.paymentStatus === 'ชำระเงินสำเร็จ' ? 'disabled' : ''}>
+                            การชำระเงิน
+                        </button>
                     </div>
+                </div>
                 `;
 
                 cardContainer.appendChild(card);
@@ -227,7 +229,7 @@
 
             if (startPage > 1) {
                 const prevButton = document.createElement('button');
-                prevButton.className = 'mx-1 px-3 py-1 bg-gray-300 rounded';
+                prevButton.className = 'mx-1 px-3 py-1 bg-gray-300 rounded-xl';
                 prevButton.innerText = 'Prev';
                 prevButton.onclick = () => {
                     currentPage = startPage - 1;
@@ -239,7 +241,7 @@
 
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = document.createElement('button');
-                pageButton.className = `mx-1 px-3 py-1 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300'}`;
+                pageButton.className = `mx-1 px-3 py-1 rounded-xl ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300'}`;
                 pageButton.innerText = i;
                 pageButton.onclick = () => {
                     currentPage = i;
@@ -251,7 +253,7 @@
 
             if (endPage < totalPages) {
                 const nextButton = document.createElement('button');
-                nextButton.className = 'mx-1 px-3 py-1 bg-gray-300 rounded';
+                nextButton.className = 'mx-1 px-3 py-1 bg-gray-300 rounded-xl';
                 nextButton.innerText = 'Next';
                 nextButton.onclick = () => {
                     currentPage = endPage + 1;
